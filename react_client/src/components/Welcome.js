@@ -7,6 +7,7 @@ import NavBar from "../components/Navbar"
 import Avatar from 'material-ui/Avatar';
 import FileFolder from 'material-ui/svg-icons/file/folder';
 import FileDownload from 'react-file-download';
+import RaisedButton from 'material-ui/RaisedButton';
 
 import {
     blue300,
@@ -44,12 +45,6 @@ backgroundColor: '#0070E0',
 }
 
 var uploadButton1={
-    lineHeight: '1',
-    padding: '0 16',
-    fontWeight :'500',
-    border: 'none',
-    color: '#FFF',
-    backgroundColor: 'grey',
 
     float:'right',
 }
@@ -62,7 +57,7 @@ var fileListItems={color:'#0070E0'}
 
 var list={marginTop:20, paddingLeft:40, paddingRight:270}
 
-var del={float:'right',color:'white',marginRight:'10px'}
+var del={float:'right',marginRight:'10px'}
 var fll ={float:'left'};
 var flr =  {float:'right'};
 var star = {float:'right',marginRight:'50px'}
@@ -86,7 +81,10 @@ class Welcome extends Component {
         userId:'',
         rootDir:'',
         message:'',
-        fileToShare:''
+        fileToShare:'',
+        sharedShow:false,
+        staredShow:false,
+        myfileShow:true
 
     };
 
@@ -224,6 +222,8 @@ class Welcome extends Component {
         var data = {'filepath':filepath};
         API.getChildDirs(data)
             .then((res) => {
+
+
                 if (res.status == 200) {
                     if(filepath!=this.state.pathTrack[this.state.pathTrack.length-1]){
                         this.state.pathTrack.push(filepath);
@@ -250,6 +250,7 @@ class Welcome extends Component {
                         sharedList: newSharedList,
                         isSelfCall: true
                     });
+                    this.showMyFiles();
                 }else if(res.status==='501'){
                     localStorage.removeItem("token");
                     localStorage.removeItem("root");
@@ -308,6 +309,31 @@ class Welcome extends Component {
         });
     }
 
+    showStaredFiles = () => {
+        this.setState({
+            sharedShow:false,
+            staredShow:true,
+            myfileShow:false
+        });
+
+    }
+
+    showSharedFiles = () => {
+        this.setState({
+            sharedShow:true,
+            staredShow:false,
+            myfileShow:false
+        });
+    }
+
+    showMyFiles = () => {
+        this.setState({
+            sharedShow:false,
+            staredShow:false,
+            myfileShow:true
+        });
+    }
+
 
 
     render(){
@@ -326,7 +352,7 @@ class Welcome extends Component {
 
 
 
-        alert(JSON.stringify(sharedList));
+        //alert(JSON.stringify(staredList));
         var username = this.state.userid;
 
         return(<div style={fullscreen}>
@@ -334,27 +360,43 @@ class Welcome extends Component {
                 <hr id="divider"></hr>
                 <div >
 
-                        <div style={choose}>
-                        <input
-                            style={uploadButton1}
-                                type="file"
-                               ref="myFile"
-                               name="myFile"
-                                bsStyle="primary" bsSize="large"
-                        /></div>
-                        <div style={uploadDiv}>
-                            <Button style={uploadButton} bsStyle="primary" bsSize="large" active onClick={() => this.handleFile()}>
-                                    <span >Upload files</span>
-                            </Button>
+
+
+
+                    <div class="modal-body row">
+
+                        <div className="col-md-2" style={{border: "2px solid grey",height:"900px"}}>
+                            <button type="button" style={{width:"200px"}} className="btn btn-default"  onClick={this.showStaredFiles}>Stared Files</button><br/>
+                            <button type="button" style={{width:"200px"}} className="btn btn-default"  onClick={this.showSharedFiles}>Shared Files</button><br/>
+                            <button type="button" style={{width:"200px"}} className="btn btn-default"  onClick={this.showMyFiles}>My Files</button>
                         </div>
+                        <div className="col-md-10">
+                            <div style={choose}>
 
-                    <div> <Button style={backButton} onClick={() => this.getBack()}>
-                        Back
-                    </Button></div>
+                                <Button bsStyle="primary" style={uploadButton}  active onClick={() => this.handleFile()}>
+                                    <span className="glyphicon glyphicon-upload "  aria-hidden="true"></span>
+                                </Button>
+
+                              <input type="file" style={uploadButton1}  ref="myFile"  name="myFile" />
 
 
+                               {/* <input
+                                    style={uploadButton1}
+                                    type="file"
+                                    ref="myFile"
+                                    name="myFile"
+                                    bsStyle="primary" bsSize="large"
+                                />*/}
 
-                    <div style={list}>
+                            </div>
+
+
+                            <div> <Button style={backButton} onClick={() => this.getBack()}>
+                                Back
+                            </Button></div>
+                       <div style={{ display: (this.state.staredShow ? 'block' : 'none') }}>
+
+                    <div style={list} >
                         Stared files
                     </div>
                     <ListGroup style={list}> {staredList.map((file, i) =>
@@ -366,9 +408,12 @@ class Welcome extends Component {
                                              size={30}
                                              style={style}/>
                                     <a onClick={() => this.getChildDir(file.filepath)}> {file.filename} </a>
-                                    <Button style={del}  onClick={()=>this.deleteDir(file.filename)} bsStyle="danger">Delete</Button>
-                                    <Button style={del}  onClick={()=>this.getChildDir(file.filepath)}   bsStyle="danger">Lookup--> </Button>
-                                    <Button style={del}  onClick={()=>this.shareFileData(file.filepath,file.filename)}   bsStyle="danger">Share</Button>
+                                    <Button style={del}  onClick={()=>this.deleteDir(file.filename)} >
+                                        <span className="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                                    </Button>
+
+                                    <Button style={del}  onClick={()=>this.getChildDir(file.filepath)}   ><span className=" glyphicon glyphicon-chevron-right" aria-hidden="true"></span> </Button>
+                                    <Button style={del}  onClick={()=>this.shareFileData(file.filepath,file.filename)}> <span className="glyphicon glyphicon-share" aria-hidden="true"></span> </Button>
                                     <Checkbox  checked={true} style={star} value={file.filepath} onChange={(e) => this.handleChange(e,file.filepath)} >Star</Checkbox>
 
                                 </div>
@@ -381,14 +426,15 @@ class Welcome extends Component {
                                            style={style}/>
                                     <a  onClick={()=>this.download(file.filepath,file.filename)} >{file.filename}</a>
 
-                                    <Button style={del} onClick={()=>this.deleteDir(file.filename)}  bsStyle="danger">Delete</Button>
-                                <Button style={del}  onClick={()=>this.download(file.filepath,file.filename)}   bsStyle="danger">Download</Button>
-                                <Button style={del}  onClick={()=>this.shareFileData(file.filepath,file.filename)}   bsStyle="danger">Share</Button>
+                                <Button style={del} onClick={()=>this.deleteDir(file.filename)}> <span className="glyphicon glyphicon-remove" aria-hidden="true"></span></Button>
+                                <Button style={del}  onClick={()=>this.download(file.filepath,file.filename)}  > <span className="glyphicon glyphicon-download" aria-hidden="true"></span></Button>
+                                <Button style={del}  onClick={()=>this.shareFileData(file.filepath,file.filename)}> <span className="glyphicon glyphicon-share" aria-hidden="true"></span> </Button>
                                 <Checkbox  checked={true} style={star}  value={file.filepath} onChange={(e) => this.handleChange(e,file.path)} >Star</Checkbox>
                             </div> )}</ListGroupItem>
                     )}
                     </ListGroup>
-
+                       </div>
+                            <div style={{ display: (this.state.sharedShow ? 'block' : 'none') }}>
                     <div style={list}>
                         Shared files
                     </div>
@@ -401,9 +447,9 @@ class Welcome extends Component {
                                              size={30}
                                              style={style}/>
                                     <a onClick={() => this.getChildDir(file.filepath)}> {file.filename} </a>
-                                    <Button style={del}  onClick={()=>this.deleteDir(file.filename)} bsStyle="danger">Delete</Button>
-                                    <Button style={del}  onClick={()=>this.getChildDir(file.filepath)}   bsStyle="danger">Lookup--></Button>
-                                    <Button style={del}  onClick={()=>this.shareFileData(file.filepath,file.filename)}   bsStyle="danger">Share</Button>
+                                    <Button style={del}  onClick={()=>this.deleteDir(file.filename)}><span className="glyphicon glyphicon-remove" aria-hidden="true"></span> </Button>
+                                    <Button style={del}  onClick={()=>this.getChildDir(file.filepath)}   ><span className="glyphicon glyphicon-chevron-right" aria-hidden="true"></span> </Button>
+                                    <Button style={del}  onClick={()=>this.shareFileData(file.filepath,file.filename)}  ><span className="glyphicon glyphicon-share" aria-hidden="true"></span> </Button>
                                     <Checkbox  checked={true} style={star} value={file.filepath} onChange={(e) => this.handleChange(e,file.filepath)} >Star</Checkbox>
 
                                 </div>
@@ -416,13 +462,15 @@ class Welcome extends Component {
                                            style={style}/>
                                 <a  onClick={()=>this.download(file.filepath,file.filename)} >{file.filename}</a>
 
-                                <Button style={del} onClick={()=>this.deleteDir(file.filename)}  bsStyle="danger">Delete</Button>
-                                <Button style={del}  onClick={()=>this.download(file.filepath,file.filename)}   bsStyle="danger">Download</Button>
-                                <Button style={del}  onClick={()=>this.shareFileData(file.filepath,file.filename)}   bsStyle="danger">Share</Button>
+                                <Button style={del} onClick={()=>this.deleteDir(file.filename)}> <span className="glyphicon glyphicon-remove" aria-hidden="true"></span> </Button>
+                                <Button style={del}  onClick={()=>this.download(file.filepath,file.filename)} ><span className="glyphicon glyphicon-download" aria-hidden="true"></span></Button>
+                                <Button style={del}  onClick={()=>this.shareFileData(file.filepath,file.filename)} ><span className="glyphicon glyphicon-share" aria-hidden="true"></span> </Button>
                                 <Checkbox  checked={true} style={star}  value={file.filepath} onChange={(e) => this.handleChange(e,file.filepath)} >Star</Checkbox>
                             </div> )}</ListGroupItem>
                     )}
                     </ListGroup>
+                            </div>
+                            <div style={{ display: (this.state.myfileShow ? 'block' : 'none') }}>
                     <div style={list}>
                         Your files
                     </div>
@@ -436,9 +484,9 @@ class Welcome extends Component {
                                              size={30}
                                              style={style}/>
                                     <a onClick={() => this.getChildDir(file.filepath)}> {file.filename} </a>
-                                    <Button style={del} onClick={()=>this.deleteDir(file.filename)}  bsStyle="danger">Delete</Button>
-                                    <Button style={del}  onClick={()=>this.getChildDir(file.filepath)}   bsStyle="danger">Lookup-->  </Button>
-                                    <Button style={del}  onClick={()=>this.shareFileData(file.filepath,file.filename)}   bsStyle="danger">Share</Button>
+                                    <Button style={del} onClick={()=>this.deleteDir(file.filename)}  ><span className="glyphicon glyphicon-remove" aria-hidden="true"></span></Button>
+                                    <Button style={del}  onClick={()=>this.getChildDir(file.filepath)}  ><span className="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>  </Button>
+                                    <Button style={del}  onClick={()=>this.shareFileData(file.filepath,file.filename)}   ><span className="glyphicon glyphicon-share" aria-hidden="true"></span></Button>
                                     <Checkbox  style={star}   checked={false} value={file.filepath} onChange={(e) => this.handleChange(e,file.filepath)} >Star</Checkbox>
 
                                 </div>
@@ -450,14 +498,17 @@ class Welcome extends Component {
                                            size={30}
                                            style={style}/>
                                 <a  >{file.filename}</a>
-                                <Button style={del} onClick={()=>this.deleteDir(file.filename)}  bsStyle="danger">Delete</Button>
-                                <Button style={del}  onClick={()=>this.download(file.filepath,file.filename)}   bsStyle="danger">Download</Button>
-                                <Button style={del}  onClick={()=>this.shareFileData(file.filepath,file.filename)}   bsStyle="danger">Share</Button>
+                                <Button style={del} onClick={()=>this.deleteDir(file.filename)} ><span className="glyphicon glyphicon-remove" aria-hidden="true"></span></Button>
+                                <Button style={del}  onClick={()=>this.download(file.filepath,file.filename)} ><span className="glyphicon glyphicon-download" aria-hidden="true"></span></Button>
+                                <Button style={del}  onClick={()=>this.shareFileData(file.filepath,file.filename)}   ><span className="glyphicon glyphicon-share" aria-hidden="true"></span></Button>
                                 <Checkbox  style={star} checked={false} value={file.filepath} onChange={(e) => this.handleChange(e,file.filepath)} >Star</Checkbox>
                             </div>)
                         }</ListGroupItem>
                     )}
                     </ListGroup>
+                            </div>
+                        </div>
+                </div>
                 </div>
             </div>
 

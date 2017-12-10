@@ -18,9 +18,9 @@ class UserGroup extends Component {
 
     state = {
         groupInfo :[],
-        groupMembers : [],
+        memberids : [],
         groupName:'',
-        groupMember :'',
+        userids :'',
         count :0
     };
 
@@ -46,13 +46,13 @@ class UserGroup extends Component {
         //alert("group : "+ JSON.stringify(group) );
         this.setState({
             groupName :group.groupname,
-            groupMembers : group.memberjson
+            memberids : group.memberjson
         });
     }
 
     setUserGroup = (groupData) => {
-        var data = {'data':groupData};
-        API.setUserGroup(data)
+
+        API.setUserGroup(groupData)
             .then((result) => {
                 if (result.status == 201) {
                     alert("Group saved successfully.");
@@ -71,9 +71,9 @@ class UserGroup extends Component {
                 this.setState({
                     groupInfo :resData.groups,
                     groupName : '',
-                    groupMembers : [],
-                    groupMember : '',
-                    count : this.state.groupMembers.length
+                    memberids : [],
+                    userids : '',
+                    count : this.state.memberids.length
                 })
             }else if(resData.status==501){
                 localStorage.removeItem("token");
@@ -85,21 +85,21 @@ class UserGroup extends Component {
 
     addItem(userEmail){
         var data = {'email':userEmail, 'index':this.state.count};
-        var jsonArry = this.state.groupMembers;
+        var jsonArry = this.state.memberids;
         jsonArry.push(data);
         this.setState({
             count: this.state.count+1,
-            groupMembers : jsonArry
+            memberids : jsonArry
         },alert("User added successfully"));
 
     }
 
     removeItem(index){
 
-        var jsonArry = this.state.groupMembers;
+        var jsonArry = this.state.memberids;
         jsonArry.slice(index,1);
         this.setState({
-            groupMembers : jsonArry
+            memberids : jsonArry
         },alert("User removed successfully"));
     }
 
@@ -158,7 +158,7 @@ class UserGroup extends Component {
                                 onChange={(event) => {
                                   //  const value=event.target.value
                                     this.setState({
-                                        groupMember: event.target.value
+                                        userids: event.target.value
                                     });
                                 }}
                             />
@@ -166,15 +166,15 @@ class UserGroup extends Component {
                         <button
                             className="btn btn-primary btn-sm"
                             onClick={() => {
-                               // alert(this.state.groupMember);
-                                this.addItem(this.state.groupMember)
+                               // alert(this.state.userids);
+                                this.addItem(this.state.userids)
                             }}
                         >Add</button>
 
                         <button
                             className="btn btn-primary btn-sm"
                             onClick={() => {
-                                // alert(this.state.groupMember);
+                                // alert(this.state.userids);
                                 this.setUserGroup(this.state)
                             }}
                         >Save</button>
@@ -186,7 +186,7 @@ class UserGroup extends Component {
                     <div className="card col-md-6">
                         <div className="card-body">
                             {
-                                this.state.groupMembers.map((member,index) => {
+                                this.state.memberids.map((member,index) => {
                                     return(
                                         <Group removeItem = {this.removeItem}
                                             key={index}

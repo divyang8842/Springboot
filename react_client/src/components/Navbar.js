@@ -69,7 +69,7 @@ export default class NavBar extends Component{
 
 
     render(){
-        var bgcolor = {backgroundColor:'dodgerblue'};
+        var bgcolor = {backgroundColor:'dodgerblue',height:"50px"};
         var ml30 = {marginLeft:'50px'};
         return(
 

@@ -279,7 +279,7 @@ export const validateEmails = (payload) =>
             return error;
         });
  export const getUserGrpups = (payload) =>
-     fetch(`${api}/getUserGroups`, {
+     fetch(`${api}/group/get`, {
          method: 'POST',
          headers: {
              ...headers,
@@ -297,7 +297,7 @@ export const validateEmails = (payload) =>
          });
 
  export const setUserGroup = (payload) =>
-     fetch(`${api}/setUserGroups`, {
+     fetch(`${api}/group/add`, {
          method: 'POST',
          headers: {
              ...headers,
