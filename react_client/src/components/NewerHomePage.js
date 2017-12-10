@@ -44,12 +44,12 @@ class NewerHomePage extends Component {
         return (
             <div className="mast-head__container container">
 
-                <Route exact path="/" render={() => (
+                <Route exact path="/" render={() =>
                     <div>
                         <Login handleSubmit={this.handleSubmit}/>
                         <Message message={this.state.message}/>
                     </div>
-                )}/>
+                }/>
 
 
                 <Route exact path="/login" render={() => (
@@ -58,11 +58,18 @@ class NewerHomePage extends Component {
                         <Message message={this.state.message}/>
                     </div>
                 )}/>
-                <Route exact path="/welcome" render={() => (
+                <Route exact path="/welcome" render={() =>  ( (  this.state.isLoggedIn?(
                     <ErrorBoundary>
                     <Welcome goToPath={this.goToPath} signout={this.signout}  getToHome={this.getToHome}  data={this.state}/>
                     </ErrorBoundary>
-                )}/>
+                ):
+                        (
+                            <div>
+                                <Login handleSubmit={this.handleSubmit}/>
+                                <Message message={this.state.message}/>
+                            </div>
+                        )
+                ))}/>
 
                 <Route exact path="/signUp" render={() => (
                     <div>
@@ -72,29 +79,53 @@ class NewerHomePage extends Component {
 
                     )}/>
 
-                <Route exact path="/userprofile" render={() => (
+                <Route exact path="/userprofile" render={() => ( (  this.state.isLoggedIn?(
                     <ErrorBoundary>
                         <UserProfile goToPath={this.goToPath} signout={this.signout} getToHome={this.getToHome} data={this.state} />
                     </ErrorBoundary>
+                        ):
+                        (
+                            <div>
+                                <Login handleSubmit={this.handleSubmit}/>
+                                <Message message={this.state.message}/>
+                            </div>
+                        )
+                ))}/>
 
-                )}/>
-
-                <Route exact path="/usergroups" render={() => (
+                <Route exact path="/usergroups" render={() => (this.state.isLoggedIn?(
                     <div>
                         <UserGroups goToPath={this.goToPath} signout={this.signout} getToHome={this.getToHome} data={this.state} />
                     </div>
+                        ):
+                        (
+                            <div>
+                                <Login handleSubmit={this.handleSubmit}/>
+                                <Message message={this.state.message}/>
+                            </div>
+                        )
+
                 )}/>
 
-                <Route exact path="/useractivity" render={() => (
+                <Route exact path="/useractivity" render={() => (this.state.isLoggedIn?(
                     <ErrorBoundary>
                         <UserActivity goToPath={this.goToPath} signout={this.signout} getToHome={this.getToHome} data={this.state} />
                     </ErrorBoundary>
+                        ):
+                        (
+                            <div>
+                                <Login handleSubmit={this.handleSubmit}/>
+                                <Message message={this.state.message}/>
+                            </div>
+                        )
 
                 )}/>
 
 
 
-
+                <Route  path="*" render={() => ( <div>
+                        <Login handleSubmit={this.handleSubmit}/>
+                        <Message message={this.state.message}/>
+                    </div>)}/>
 
             </div>
         );

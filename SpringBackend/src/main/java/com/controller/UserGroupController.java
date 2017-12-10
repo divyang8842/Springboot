@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.http.ResponseEntity;
 
+import javax.servlet.http.HttpSession;
 import java.util.List;
 
 @Controller
@@ -23,8 +24,11 @@ public class UserGroupController {
     UserGroupService userGroupService;
 
     @PostMapping(path = "/add",consumes = MediaType.APPLICATION_JSON_VALUE)
-    public  ResponseEntity<?> saveUserGroup(@RequestBody UserGroup userGroup){
+    public  ResponseEntity<?> saveUserGroup(@RequestBody UserGroup userGroup, HttpSession httpSession){
 
+        int userid= Integer.parseInt(String.valueOf(httpSession.getAttribute("id"))) ;
+
+        userGroup.setCreatedby(userid);
         userGroupService.addGroup(userGroup);
         return new ResponseEntity(HttpStatus.OK);
     }

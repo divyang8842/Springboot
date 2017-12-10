@@ -19,7 +19,7 @@ class UserGroup extends Component {
     state = {
         groupInfo :[],
         memberids : [],
-        groupName:'',
+        groupname:'',
         userids :'',
         count :0
     };
@@ -45,8 +45,8 @@ class UserGroup extends Component {
     updateGroup = (group) =>{
         //alert("group : "+ JSON.stringify(group) );
         this.setState({
-            groupName :group.groupname,
-            memberids : group.memberjson
+            groupname :group.groupname,
+            memberids : (group.userids).split(",")
         });
     }
 
@@ -67,19 +67,21 @@ class UserGroup extends Component {
         var data = {'userid':userid};
         API.getUserGrpups(data).then((resData) => {
              //alert("data is "+JSON.stringify(resData));
-            if (resData.status == 201) {
-                this.setState({
-                    groupInfo :resData.groups,
-                    groupName : '',
-                    memberids : [],
-                    userids : '',
-                    count : this.state.memberids.length
-                })
-            }else if(resData.status==501){
+
+
+             if(resData.status==501){
                 localStorage.removeItem("token");
                 localStorage.removeItem("root");
                 this.getHome();
-            }
+            }else{
+                 this.setState({
+                     groupInfo :resData,
+                     groupname : '',
+                     memberids : [],
+                     userids : '',
+                     count : this.state.memberids.length
+                 })
+             }
         });
     };
 
@@ -140,13 +142,13 @@ class UserGroup extends Component {
                         <div className="form-group">
                             <input
                                 className="form-control"
-                                value = {this.state.groupName}
+                                value = {this.state.groupname}
                                 type="text"
                                 placeholder="Enter Group Name"
                                 onChange={(event) => {
                                  //   const value=event.target.value
                                     this.setState({
-                                        groupName: event.target.value
+                                        groupname: event.target.value
                                     });
                                 }}
                             />

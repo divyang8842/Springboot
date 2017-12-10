@@ -15,10 +15,16 @@ public class RequestIntercepter implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         HttpSession session = request.getSession();
-        String userid = String.valueOf(session.getAttribute("id"));
-        if(userid==null || userid.equals("0")){
+        if(session.getAttribute("id")==null){
+            session.invalidate();
             return false;
+        }else{
+            String userid = String.valueOf(session.getAttribute("id"));
+            if(userid==null || userid.equals("0")){
+                return false;
+            }
         }
+
         return true;
     }
 
