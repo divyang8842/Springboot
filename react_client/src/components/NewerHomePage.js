@@ -40,11 +40,19 @@ class NewerHomePage extends Component {
         rootDir:''
     };
 
+    componentWillMount(){
+        if(localStorage.getItem("token")!=undefined && localStorage.getItem("token")!=0){
+            this.setState({
+                isLoggedIn:true
+            });
+        }
+    }
+
     render() {
         return (
             <div className="mast-head__container container">
 
-                <Route exact path="/" render={() =>
+                <Route  path="/" render={() =>
                     <div>
                         <Login handleSubmit={this.handleSubmit}/>
                         <Message message={this.state.message}/>
@@ -52,13 +60,13 @@ class NewerHomePage extends Component {
                 }/>
 
 
-                <Route exact path="/login" render={() => (
+               {/* <Route exact path="/login" render={() => (
                     <div>
                         <Login handleSubmit={this.handleSubmit}/>
                         <Message message={this.state.message}/>
                     </div>
-                )}/>
-                <Route exact path="/welcome" render={() =>  ( (  this.state.isLoggedIn?(
+                )}/>*/}
+                <Route  path="/welcome" render={() =>  ( (  this.state.isLoggedIn?(
                     <ErrorBoundary>
                     <Welcome goToPath={this.goToPath} signout={this.signout}  getToHome={this.getToHome}  data={this.state}/>
                     </ErrorBoundary>
@@ -71,7 +79,7 @@ class NewerHomePage extends Component {
                         )
                 ))}/>
 
-                <Route exact path="/signUp" render={() => (
+                <Route  path="/signUp" render={() => (
                     <div>
                     <SignUp handleSignUp={this.handleSignUp} />
                     <Message message={this.state.message}/>
@@ -79,7 +87,7 @@ class NewerHomePage extends Component {
 
                     )}/>
 
-                <Route exact path="/userprofile" render={() => ( (  this.state.isLoggedIn?(
+                <Route  path="/userprofile" render={() => ( (  this.state.isLoggedIn?(
                     <ErrorBoundary>
                         <UserProfile goToPath={this.goToPath} signout={this.signout} getToHome={this.getToHome} data={this.state} />
                     </ErrorBoundary>
@@ -92,7 +100,7 @@ class NewerHomePage extends Component {
                         )
                 ))}/>
 
-                <Route exact path="/usergroups" render={() => (this.state.isLoggedIn?(
+                <Route  path="/usergroups" render={() => (this.state.isLoggedIn?(
                     <div>
                         <UserGroups goToPath={this.goToPath} signout={this.signout} getToHome={this.getToHome} data={this.state} />
                     </div>
@@ -106,7 +114,7 @@ class NewerHomePage extends Component {
 
                 )}/>
 
-                <Route exact path="/useractivity" render={() => (this.state.isLoggedIn?(
+                <Route  path="/useractivity" render={() => (this.state.isLoggedIn?(
                     <ErrorBoundary>
                         <UserActivity goToPath={this.goToPath} signout={this.signout} getToHome={this.getToHome} data={this.state} />
                     </ErrorBoundary>
@@ -122,10 +130,10 @@ class NewerHomePage extends Component {
 
 
 
-                <Route  path="*" render={() => ( <div>
+               {/* <Route  path="*" render={() => ( <div>
                         <Login handleSubmit={this.handleSubmit}/>
                         <Message message={this.state.message}/>
-                    </div>)}/>
+                    </div>)}/>*/}
 
             </div>
         );
@@ -173,13 +181,14 @@ class NewerHomePage extends Component {
 
 
     signout = () =>{
-        API.doLogout({"data":""}).then((status) =>{
+        //
+        API.doLogout({"data":""});
+
             localStorage.removeItem('token');
             localStorage.removeItem('root');
-            alert("done");
+            //alert("done");
             this.props.history.push('/login');
 
-        });
     }
     handleSignUp = (userdata) => {
         API.doSignUp(userdata)

@@ -54,13 +54,7 @@ export default class NavBar extends Component{
 
     signout = () =>
     {
-
-        API.doLogout()
-            .then((status) => {
-                if (status.status == 201) {
-                    this.props.signout();
-                }
-            })
+        this.props.signout();
     }
 
     _toggleDrawer = (open) => this.setState({open: !this.state.open});

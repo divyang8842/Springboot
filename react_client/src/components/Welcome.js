@@ -379,15 +379,6 @@ class Welcome extends Component {
 
                               <input type="file" style={uploadButton1}  ref="myFile"  name="myFile" />
 
-
-                               {/* <input
-                                    style={uploadButton1}
-                                    type="file"
-                                    ref="myFile"
-                                    name="myFile"
-                                    bsStyle="primary" bsSize="large"
-                                />*/}
-
                             </div>
 
 
