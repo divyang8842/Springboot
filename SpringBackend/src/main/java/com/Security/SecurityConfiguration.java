@@ -2,6 +2,7 @@ package com.Security;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.format.FormatterRegistry;
 import org.springframework.http.converter.HttpMessageConverter;
@@ -15,6 +16,7 @@ import org.springframework.web.servlet.config.annotation.*;
 import java.util.List;
 
 @Configuration
+@SpringBootConfiguration
 public class SecurityConfiguration implements WebMvcConfigurer {
 
 
