@@ -17,7 +17,7 @@ import java.util.List;
 @Service
 public class DirectoryService {
 
-    public final static String FILE_ROOT_PATH = "D:/temps";
+    public static String FILE_ROOT_PATH ="./";
 
 
     @Autowired

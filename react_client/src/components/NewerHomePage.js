@@ -52,7 +52,7 @@ class NewerHomePage extends Component {
         return (
             <div className="mast-head__container container">
 
-                <Route  path="/" render={() =>
+                <Route exact path="/" render={() =>
                     <div>
                         <Login handleSubmit={this.handleSubmit}/>
                         <Message message={this.state.message}/>
@@ -66,7 +66,7 @@ class NewerHomePage extends Component {
                         <Message message={this.state.message}/>
                     </div>
                 )}/>*/}
-                <Route  path="/welcome" render={() =>  ( (  this.state.isLoggedIn?(
+                <Route  exact path="/welcome" render={() =>  ( (  this.state.isLoggedIn?(
                     <ErrorBoundary>
                     <Welcome goToPath={this.goToPath} signout={this.signout}  getToHome={this.getToHome}  data={this.state}/>
                     </ErrorBoundary>
@@ -79,7 +79,7 @@ class NewerHomePage extends Component {
                         )
                 ))}/>
 
-                <Route  path="/signUp" render={() => (
+                <Route  exact path="/signUp" render={() => (
                     <div>
                     <SignUp handleSignUp={this.handleSignUp} />
                     <Message message={this.state.message}/>
@@ -87,7 +87,7 @@ class NewerHomePage extends Component {
 
                     )}/>
 
-                <Route  path="/userprofile" render={() => ( (  this.state.isLoggedIn?(
+                <Route  exact path="/userprofile" render={() => ( (  this.state.isLoggedIn?(
                     <ErrorBoundary>
                         <UserProfile goToPath={this.goToPath} signout={this.signout} getToHome={this.getToHome} data={this.state} />
                     </ErrorBoundary>
@@ -100,7 +100,7 @@ class NewerHomePage extends Component {
                         )
                 ))}/>
 
-                <Route  path="/usergroups" render={() => (this.state.isLoggedIn?(
+                <Route  exact path="/usergroups" render={() => (this.state.isLoggedIn?(
                     <div>
                         <UserGroups goToPath={this.goToPath} signout={this.signout} getToHome={this.getToHome} data={this.state} />
                     </div>
@@ -114,7 +114,7 @@ class NewerHomePage extends Component {
 
                 )}/>
 
-                <Route  path="/useractivity" render={() => (this.state.isLoggedIn?(
+                <Route  exact path="/useractivity" render={() => (this.state.isLoggedIn?(
                     <ErrorBoundary>
                         <UserActivity goToPath={this.goToPath} signout={this.signout} getToHome={this.getToHome} data={this.state} />
                     </ErrorBoundary>

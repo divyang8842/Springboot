@@ -251,7 +251,7 @@ class Welcome extends Component {
                         isSelfCall: true
                     });
                     this.showMyFiles();
-                }else if(res.status==='501'){
+                }else {
                     localStorage.removeItem("token");
                     localStorage.removeItem("root");
                     this.signout();

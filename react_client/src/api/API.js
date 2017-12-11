@@ -142,9 +142,13 @@ export const doLogout = (payload) =>
         credentials:'include',
         body: JSON.stringify(payload)
     }).then(res => {
-            localStorage.removeItem("token");
-            localStorage.removeItem("root");
-            return res;
+
+        localStorage.removeItem('token');
+        localStorage.removeItem('root');
+        //alert("done");
+       // this.props.history.push('/login');
+
+        return res;
         })
         .catch(error => {
             console.log("This is error");
